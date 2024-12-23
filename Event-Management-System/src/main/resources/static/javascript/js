@@ -1,0 +1,16 @@
+// src/main/resources/static/js/yourScript.js
+
+function showEventForm() {
+    alert("Event form shown!");
+}
+
+function editEvent(eventId) {
+    alert("Edit event with ID: " + eventId);
+}
+
+function deleteEvent(eventId) {
+    const confirmation = confirm("Are you sure you want to delete this event?");
+    if (confirmation) {
+        alert("Event deleted with ID: " + eventId);
+    }
+}

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASA Planner</title>
+    <link th:href="@{/css/styles.css}" rel="stylesheet" />
+    <script th:src="@{/js/javascript.js}"></script>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            color: #333;
+        }
+
+        nav {
+            background: linear-gradient(to right, #4CAF50, #81C784);
+            padding: 10px 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            color: white;
+            font-size: 24px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        nav ul li {
+            position: relative;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-weight: bold;
+            padding: 10px 20px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        nav ul li a:hover {
+            background: #fff;
+            color: #4CAF50;
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        form {
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 600px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        form label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+
+        form input, form button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        form button {
+            background: #4CAF50;
+            color: white;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        form button:hover {
+            background: #388E3C;
+        }
+
+        .container h1 {
+            text-align: center;
+            margin: 20px 0;
+            color: #4CAF50;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        table th, table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        table th {
+            background: #4CAF50;
+            color: white;
+        }
+
+        button {
+            font-size: 16px;
+            margin: 5px;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        button:hover {
+            background-color: #2E7D32;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="logo">ASA Planner</div>
+    <ul>
+        <li><a href="/events">Event Management</a></li>
+        <li><a href="/attendees">Attendee Management</a></li>
+        <li><a href="/tasks">Task Tracker</a></li>
+    </ul>
+</nav>
+<form th:action="@{/events}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" required />
+    <label for="description">Description:</label>
+    <input type="text" id="description" name="description" required />
+    <label for="location">Location:</label>
+    <input type="text" id="location" name="location" required />
+    <label for="date">Date:</label>
+    <input type="date" id="date" name="date" required />
+    <button type="submit">Save</button>
+</form>
+
+<div class="container">
+    <!-- Event Management Section -->
+    <div th:if="${page == 'events'}">
+        <h1>Event Management</h1>
+        <button onclick="showEventForm()">Add Event</button>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Description</th>
+                <th>Location</th>
+                <th>Date</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="event : ${events}">
+                <td th:text="${event.name}"></td>
+                <td th:text="${event.description}"></td>
+                <td th:text="${event.location}"></td>
+                <td th:text="${event.date}"></td>
+                <td>
+                    <button onclick="editEvent(${event.id})">Edit</button>
+                    <button onclick="deleteEvent(${event.id})">Delete</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+
+    <!-- Attendee Management Section -->
+    <div th:if="${page == 'attendees'}">
+        <h1>Attendee Management</h1>
+        <button onclick="showAttendeeForm()">Add Attendee</button>
+        <table>
+            <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="attendee : ${attendees}">
+                <td th:text="${attendee.name}"></td>
+                <td th:text="${attendee.email}"></td>
+                <td>
+                    <button onclick="removeAttendee(${attendee.id})">Remove</button>
+                    <button onclick="assignToEvent(${attendee.id})">Assign to Event</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Task Tracker Section -->
+    <div th:if="${page == 'tasks'}">
+        <h1>Task Tracker</h1>
+        <table>
+            <thead>
+            <tr>
+                <th>Task</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.name}"></td>
+                <td th:text="${task.status}"></td>
+                <td>
+                    <button onclick="updateTaskStatus(${task.id}, 'Pending')">Set Pending</button>
+                    <button onclick="updateTaskStatus(${task.id}, 'Completed')">Set Completed</button>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+</body>
+</html>
