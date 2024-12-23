@@ -95,7 +95,7 @@ This project is licensed under the MIT License. See the `LICENSE` file for detai
 ## 👥 Collaborators
 - **Anupam Kumar**: anupamkumar3062@gmail.com
 - **Abhishek Singh**: 20abhisinghrajput@gmail.com
-- **Shantanu Kumar**: kshantanu838@gmail.com
+- **Kumar Shantanu**: kshantanu838@gmail.com
 
 ---
 
